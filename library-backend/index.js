@@ -140,7 +140,7 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      let result = book
+      let result = books
       if (args.author) {
         result = result.filter(b => b.author === args.author)
       }
