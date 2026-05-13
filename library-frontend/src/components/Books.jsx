@@ -10,7 +10,6 @@ const ALL_BOOKS = gql`
       published
     }
   }
-
 `
 
 const Books = (props) => {
