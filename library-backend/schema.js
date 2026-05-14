@@ -2,7 +2,7 @@ const typeDefs = /* GraphQL */ `
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
+    allBooks(author: String, genres:[String!]): [Book!]!
     allAuthors: [Author!]!
   }
 
