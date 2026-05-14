@@ -14,10 +14,10 @@ const resolvers = {
         const author = await Author.findOne({ name: args.author })
         if (author) filter.author = author._id
       }
-      if (args.genres) {
-        filter.genres = { $all: args.genres }
+      if (args.genre) {
+        filter.genres = args.genre
       }
-      return Book.find(filter)
+      return Book.find(filter).populate('author')
     },
     allAuthors: async () => { 
       return Author.find({})
@@ -69,7 +69,7 @@ const resolvers = {
           }
         })
       }
-      return book
+      return Book.findById(book._id).populate('author')
     },
     editAuthor: async (root, args, { currentUser }) => {
       if(!currentUser) {
@@ -83,12 +83,7 @@ const resolvers = {
       const author = await Author.findOne({ name: args.name })
 
       if (!author) {
-        throw new GraphQLError('Author not found', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name,
-          }
-        })
+        return null
       }
 
       author.born = args.setBornTo
@@ -136,6 +131,15 @@ const resolvers = {
       }
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    },
+    _resetDatabase: async() => {
+      if (process.env.NODE_ENV !== 'test') {
+        throw new GraphQLError('_resetDatabase is only available in test mode')
+      }
+      await Author.deleteMany({})
+      await Book.deleteMany({})
+      await User.deleteMany({})
+      return true
     }
   }
 }

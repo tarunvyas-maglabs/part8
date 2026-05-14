@@ -2,7 +2,7 @@ const typeDefs = /* GraphQL */ `
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genres:[String!]): [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
     me: User
   }
@@ -51,6 +51,7 @@ const typeDefs = /* GraphQL */ `
       username: String!
       password: String!
     ): Token
+    _resetDatabase: Boolean
   }
 
 `
