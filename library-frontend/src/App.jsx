@@ -5,17 +5,27 @@ import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
 import { useApolloClient } from '@apollo/client/react'
+import Notification from './components/Notification'
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('book-user-token'))
   const [page, setPage] = useState('authors')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const client = useApolloClient()
+
+  const Notify = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 10000)
+  }
 
   const onLogout = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+    setPage('authors')
   }
 
   return (
@@ -35,6 +45,8 @@ const App = () => {
         )}
       </div>
 
+      <Notification errorMessage={errorMessage}/>
+
       <Authors show={page === 'authors'} token={token}/>
 
       <Books show={page === 'books'} />
@@ -43,7 +55,7 @@ const App = () => {
 
       <Recommended show={page === 'recommended'}/>
 
-      <LoginForm show={page === 'login'} setToken={setToken} setPage={setPage}/>
+      <LoginForm show={page === 'login'} setToken={setToken} setPage={setPage} setError={Notify}/>
     </div>
   )
 }

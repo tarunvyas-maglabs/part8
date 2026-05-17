@@ -39,19 +39,23 @@ const AuthorForm = ({ authors }) => {
 
   return(
     <div>
-      <h2>change number</h2>
+      <h2>Set birthyear</h2>
       <form onSubmit={submit}>
         <div>
-          name
-          <select value={name} onChange={({ target }) => setName(target.value)}>
-            {authors.map(a => (
-              <option value={a.name} key={a.id}>{a.name}</option>)
-            )}
-          </select>
+          <label>
+            name
+            <select value={name} onChange={({ target }) => setName(target.value)} name="name">
+              {authors.map(a => (
+                <option value={a.name} key={a.id}>{a.name}</option>)
+              )}
+            </select>
+          </label>
         </div>
         <div>
-          born
-          <input value={born} onChange={({ target }) => setBorn(target.value)}/>
+          <label>
+            born
+            <input value={born} onChange={({ target }) => setBorn(target.value)}/>
+          </label>
         </div>
         <button type='submit'>update author</button>
       </form>
