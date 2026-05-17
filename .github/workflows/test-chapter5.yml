@@ -2,9 +2,9 @@ name: E2E tests (library)
 
 on:
    push:
-     branches: [ main, master ]
+   branches: [ main, master ]
   workflow_dispatch:
-cd
+
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
