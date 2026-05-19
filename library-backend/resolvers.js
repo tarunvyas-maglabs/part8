@@ -61,9 +61,9 @@ const resolvers = {
         }
       }
 
-      const book = new Book({ ...args, author: author._id })
+      const newBook = new Book({ ...args, author: author._id })
       try {
-        await book.save()
+        await newBook.save()
       } catch (error) {
         throw new GraphQLError('Failed to add book', {
           extensions: {
@@ -72,9 +72,10 @@ const resolvers = {
           }
         })
       }
-      pubsub.publish('BOOK_ADDED', { personAdded: person })
+      const book = await Book.findById(newBook._id).populate('author')
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
 
-      return Book.findById(book._id).populate('author')
+      return book
     },
     editAuthor: async (root, args, { currentUser }) => {
       if(!currentUser) {

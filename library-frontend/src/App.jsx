@@ -4,15 +4,38 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
-import { useApolloClient } from '@apollo/client/react'
+import { useApolloClient, useSubscription } from '@apollo/client/react'
 import Notification from './components/Notification'
+import { gql } from "@apollo/client"
+import { addBookToCache } from '../utils/apolloCache'
 
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      id
+      title
+      author {
+        name
+      }
+      published
+      genres
+    }
+  }
+`
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('book-user-token'))
   const [page, setPage] = useState('authors')
   const [errorMessage, setErrorMessage] = useState(null)
 
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded
+      window.alert(`Added ${addedBook.title} by ${addedBook.author.name}`)
+      addBookToCache(client.cache, addedBook)
+    }
+  })
 
   const Notify = (message) => {
     setErrorMessage(message)

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client/react'
 import { gql } from '@apollo/client'
+import { addBookToCache } from '../../utils/apolloCache'
 
 const ALL_BOOKS = gql`
   query {
@@ -46,11 +47,8 @@ const NewBook = (props) => {
 
   const [addBook] = useMutation(ADD_BOOK, {
     update: (cache, response) => {
-      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-        return {
-          allBooks: allBooks.concat(response.data.addBook)
-        }
-      })
+      const addedBook = response.data.addBook
+      addBookToCache(cache, addedBook)
     }
   })
 
